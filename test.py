@@ -2,7 +2,7 @@ import unittest
 import sympy
 from sympy.abc import x, y, z, a, b, c, f, t, k, n
 
-from process_latex import process_sympy
+from latex2sympy import process_sympy
 
 
 theta = sympy.Symbol('theta')

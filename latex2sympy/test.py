@@ -1,23 +1,36 @@
-from sympy import *
-from sympy.abc import x,y,z,a,b,c,f,t,k,n
+import unittest
+import sympy
+from sympy.abc import x, y, z, a, b, c, f, t, k, n
 
 from process_latex import process_sympy
 
-theta = Symbol('theta')
+
+theta = sympy.Symbol('theta')
+
 
 # shorthand definitions
 def _Add(a, b):
-    return Add(a, b, evaluate=False)
+    return sympy.Add(a, b, evaluate=False)
+
+
 def _Mul(a, b):
-    return Mul(a, b, evaluate=False)
+    return sympy.Mul(a, b, evaluate=False)
+
+
 def _Pow(a, b):
-    return Pow(a, b, evaluate=False)
+    return sympy.Pow(a, b, evaluate=False)
+
+
 def _Abs(a):
-    return Abs(a, evaluate=False)
+    return sympy.Abs(a, evaluate=False)
+
+
 def _factorial(a):
-    return factorial(a, evaluate=False)
+    return sympy.factorial(a, evaluate=False)
+
+
 def _log(a, b):
-    return log(a, b, evaluate=False)
+    return sympy.log(a, b, evaluate=False)
 
 
 # These latex strings should parse to the corresponding
@@ -28,7 +41,7 @@ GOOD_PAIRS = [
     ("-3.14", _Mul(-1, 3.14)),
     ("(-7.13)(1.5)", _Mul(_Mul(-1, 7.13), 1.5)),
     ("x", x),
-    ("2x", 2*x),
+    ("2x", 2 * x),
     ("x^2", x**2),
     ("x^{3 + 1}", x**_Add(3,1)),
     ("-c", -c),
@@ -36,67 +49,67 @@ GOOD_PAIRS = [
     ("a / b", a / b),
     ("a \\div b", a / b),
     ("a + b", a + b),
-    ("a + b - a", _Add(a+b, -a)),
-    ("a^2 + b^2 = c^2", Eq(a**2 + b**2, c**2)),
-    ("\\sin \\theta", sin(theta)),
-    ("\\sin(\\theta)", sin(theta)),
-    ("\\sin^{-1} a", asin(a)),
-    ("\\sin a \\cos b", _Mul(sin(a), cos(b))),
-    ("\\sin \\cos \\theta", sin(cos(theta))),
-    ("\\sin(\\cos \\theta)", sin(cos(theta))),
+    ("a + b - a", _Add(a + b, -a)),
+    ("a^2 + b^2 = c^2", sympy.Eq(a**2 + b**2, c**2)),
+    ("\\sin \\theta", sympy.sin(theta)),
+    ("\\sin(\\theta)", sympy.sin(theta)),
+    ("\\sin^{-1} a", sympy.asin(a)),
+    ("\\sin a \\cos b", _Mul(sympy.sin(a), sympy.cos(b))),
+    ("\\sin \\cos \\theta", sympy.sin(sympy.cos(theta))),
+    ("\\sin(\\cos \\theta)", sympy.sin(sympy.cos(theta))),
     ("\\frac{a}{b}", a / b),
     ("\\frac{a + b}{c}", _Mul(a + b, _Pow(c,-1))),
     ("\\frac{7}{3}", _Mul(7, _Pow(3,-1))),
-    ("(\\csc x)(\\sec y)", csc(x)*sec(y)),
-    ("\\lim_{x \\to 3} a", Limit(a, x, 3)),
-    ("\\lim_{x \\rightarrow 3} a", Limit(a, x, 3)),
-    ("\\lim_{x \\Rightarrow 3} a", Limit(a, x, 3)),
-    ("\\lim_{x \\longrightarrow 3} a", Limit(a, x, 3)),
-    ("\\lim_{x \\Longrightarrow 3} a", Limit(a, x, 3)),
-    ("\\lim_{x \\to 3^{+}} a", Limit(a, x, 3, dir='+')),
-    ("\\lim_{x \\to 3^{-}} a", Limit(a, x, 3, dir='-')),
-    ("\\infty", oo),
-    ("\\lim_{x \\to \\infty} \\frac{1}{x}", Limit(_Mul(1, _Pow(x,-1)), x, oo)),
-    ("\\frac{d}{dx} x", Derivative(x, x)),
-    ("\\frac{d}{dt} x", Derivative(x, t)),
+    ("(\\csc x)(\\sec y)", sympy.csc(x) * sympy.sec(y)),
+    ("\\lim_{x \\to 3} a", sympy.Limit(a, x, 3)),
+    ("\\lim_{x \\rightarrow 3} a", sympy.Limit(a, x, 3)),
+    ("\\lim_{x \\Rightarrow 3} a", sympy.Limit(a, x, 3)),
+    ("\\lim_{x \\longrightarrow 3} a", sympy.Limit(a, x, 3)),
+    ("\\lim_{x \\Longrightarrow 3} a", sympy.Limit(a, x, 3)),
+    ("\\lim_{x \\to 3^{+}} a", sympy.Limit(a, x, 3, dir='+')),
+    ("\\lim_{x \\to 3^{-}} a", sympy.Limit(a, x, 3, dir='-')),
+    ("\\infty", sympy.oo),
+    ("\\lim_{x \\to \\infty} \\frac{1}{x}", sympy.Limit(_Mul(1, _Pow(x,-1)), x, sympy.oo)),
+    ("\\frac{d}{dx} x", sympy.Derivative(x, x)),
+    ("\\frac{d}{dt} x", sympy.Derivative(x, t)),
     ("f(x)", f(x)),
     ("f(x, y)", f(x, y)),
     ("f(x, y, z)", f(x, y, z)),
-    ("\\frac{d f(x)}{dx}", Derivative(f(x), x)),
-    ("\\frac{d\\theta(x)}{dx}", Derivative(theta(x), x)),
+    ("\\frac{d f(x)}{dx}", sympy.Derivative(f(x), x)),
+    ("\\frac{d\\theta(x)}{dx}", sympy.Derivative(theta(x), x)),
     ("|x|", _Abs(x)),
-    ("||x||", _Abs(Abs(x))),
-    ("|x||y|", _Abs(x)*_Abs(y)),
-    ("||x||y||", _Abs(_Abs(x)*_Abs(y))),
-    ("\pi^{|xy|}", Symbol('pi')**_Abs(x*y)),
-    ("\\int x dx", Integral(x, x)),
-    ("\\int x d\\theta", Integral(x, theta)),
-    ("\\int (x^2 - y)dx", Integral(x**2 - y, x)),
-    ("\\int x + a dx", Integral(_Add(x, a), x)),
-    ("\\int da", Integral(1, a)),
-    ("\\int_0^7 dx", Integral(1, (x, 0, 7))),
-    ("\\int_a^b x dx", Integral(x, (x, a, b))),
-    ("\\int^b_a x dx", Integral(x, (x, a, b))),
-    ("\\int_{a}^b x dx", Integral(x, (x, a, b))),
-    ("\\int^{b}_a x dx", Integral(x, (x, a, b))),
-    ("\\int_{a}^{b} x dx", Integral(x, (x, a, b))),
-    ("\\int^{b}_{a} x dx", Integral(x, (x, a, b))),
-    ("\\int_{f(a)}^{f(b)} f(z) dz", Integral(f(z), (z, f(a), f(b)))),
-    ("\\int (x+a)", Integral(_Add(x,a), x)),
-    ("\\int a + b + c dx", Integral(_Add(_Add(a,b),c), x)),
-    ("\\int \\frac{dz}{z}", Integral(Pow(z,-1), z)),
-    ("\\int \\frac{3 dz}{z}", Integral(3*Pow(z, -1), z)),
-    ("\\int \\frac{1}{x} dx", Integral(Pow(x, -1), x)),
-    ("\\int \\frac{1}{a} + \\frac{1}{b} dx", Integral(_Add(_Pow(a,-1), Pow(b,-1)),x)),
-    ("\\int \\frac{3 \cdot d\\theta}{\\theta}", Integral(3*_Pow(theta,-1), theta)),
-    ("\\int \\frac{1}{x} + 1 dx", Integral(_Add(_Pow(x, -1), 1), x)),
-    ("x_0", Symbol('x_{0}')),
-    ("x_{1}", Symbol('x_{1}')),
-    ("x_a", Symbol('x_{a}')),
-    ("x_{b}", Symbol('x_{b}')),
-    ("h_\\theta", Symbol('h_{theta}')),
-    ("h_{\\theta}", Symbol('h_{theta}')),
-    ("h_{\\theta}(x_0, x_1)", Symbol('h_{theta}')(Symbol('x_{0}'), Symbol('x_{1}'))),
+    ("||x||", _Abs(sympy.Abs(x))),
+    ("|x||y|", _Abs(x) * _Abs(y)),
+    ("||x||y||", _Abs(_Abs(x) * _Abs(y))),
+    ("\pi^{|xy|}", sympy.Symbol('pi')**_Abs(x * y)),
+    ("\\int x dx", sympy.Integral(x, x)),
+    ("\\int x d\\theta", sympy.Integral(x, theta)),
+    ("\\int (x^2 - y)dx", sympy.Integral(x**2 - y, x)),
+    ("\\int x + a dx", sympy.Integral(_Add(x, a), x)),
+    ("\\int da", sympy.Integral(1, a)),
+    ("\\int_0^7 dx", sympy.Integral(1, (x, 0, 7))),
+    ("\\int_a^b x dx", sympy.Integral(x, (x, a, b))),
+    ("\\int^b_a x dx", sympy.Integral(x, (x, a, b))),
+    ("\\int_{a}^b x dx", sympy.Integral(x, (x, a, b))),
+    ("\\int^{b}_a x dx", sympy.Integral(x, (x, a, b))),
+    ("\\int_{a}^{b} x dx", sympy.Integral(x, (x, a, b))),
+    ("\\int^{b}_{a} x dx", sympy.Integral(x, (x, a, b))),
+    ("\\int_{f(a)}^{f(b)} f(z) dz", sympy.Integral(f(z), (z, f(a), f(b)))),
+    ("\\int (x+a)", sympy.Integral(_Add(x,a), x)),
+    ("\\int a + b + c dx", sympy.Integral(_Add(_Add(a,b),c), x)),
+    ("\\int \\frac{dz}{z}", sympy.Integral(sympy.Pow(z,-1), z)),
+    ("\\int \\frac{3 dz}{z}", sympy.Integral(3 * sympy.Pow(z, -1), z)),
+    ("\\int \\frac{1}{x} dx", sympy.Integral(sympy.Pow(x, -1), x)),
+    ("\\int \\frac{1}{a} + \\frac{1}{b} dx", sympy.Integral(_Add(_Pow(a,-1), sympy.Pow(b,-1)),x)),
+    ("\\int \\frac{3 \cdot d\\theta}{\\theta}", sympy.Integral(3 * _Pow(theta,-1), theta)),
+    ("\\int \\frac{1}{x} + 1 dx", sympy.Integral(_Add(_Pow(x, -1), 1), x)),
+    ("x_0", sympy.Symbol('x_{0}')),
+    ("x_{1}", sympy.Symbol('x_{1}')),
+    ("x_a", sympy.Symbol('x_{a}')),
+    ("x_{b}", sympy.Symbol('x_{b}')),
+    ("h_\\theta", sympy.Symbol('h_{theta}')),
+    ("h_{\\theta}", sympy.Symbol('h_{theta}')),
+    ("h_{\\theta}(x_0, x_1)", sympy.Symbol('h_{theta}')(sympy.Symbol('x_{0}'), sympy.Symbol('x_{1}'))),
     ("x!", _factorial(x)),
     ("100!", _factorial(100)),
     ("\\theta!", _factorial(theta)),
@@ -104,33 +117,33 @@ GOOD_PAIRS = [
     ("(x!)!", _factorial(_factorial(x))),
     ("x!!!", _factorial(_factorial(_factorial(x)))),
     ("5!7!", _Mul(_factorial(5), _factorial(7))),
-    ("\\sqrt{x}", sqrt(x)),
-    ("\\sqrt{x + b}", sqrt(_Add(x, b))),
-    ("\\sqrt[3]{\\sin x}", root(sin(x), 3)),
-    ("\\sqrt[y]{\\sin x}", root(sin(x), y)),
-    ("\\sqrt[\\theta]{\\sin x}", root(sin(x), theta)),
-    ("x < y", StrictLessThan(x, y)),
-    ("x \\leq y", LessThan(x, y)),
-    ("x > y", StrictGreaterThan(x, y)),
-    ("x \\geq y", GreaterThan(x, y)),
-    ("\\mathit{x}", Symbol('x')),
-    ("\\mathit{test}", Symbol('test')),
-    ("\\mathit{TEST}", Symbol('TEST')),
-    ("\\mathit{HELLO world}", Symbol('HELLO world')),
-    ("\\sum_{k = 1}^{3} c", Sum(c, (k, 1, 3))),
-    ("\\sum_{k = 1}^3 c", Sum(c, (k, 1, 3))),
-    ("\\sum^{3}_{k = 1} c", Sum(c, (k, 1, 3))),
-    ("\\sum^3_{k = 1} c", Sum(c, (k, 1, 3))),
-    ("\\sum_{k = 1}^{10} k^2", Sum(k**2, (k, 1, 10))),
-    ("\\sum_{n = 0}^{\\infty} \\frac{1}{n!}", Sum(_Pow(_factorial(n),-1), (n, 0, oo))),
-    ("\\prod_{a = b}^{c} x", Product(x, (a, b, c))),
-    ("\\prod_{a = b}^c x", Product(x, (a, b, c))),
-    ("\\prod^{c}_{a = b} x", Product(x, (a, b, c))),
-    ("\\prod^c_{a = b} x", Product(x, (a, b, c))),
-    ("\\ln x", _log(x, E)),
-    ("\\ln xy", _log(x*y, E)),
+    ("\\sqrt{x}", sympy.sqrt(x)),
+    ("\\sqrt{x + b}", sympy.sqrt(_Add(x, b))),
+    ("\\sqrt[3]{\\sin x}", sympy.root(sympy.sin(x), 3)),
+    ("\\sqrt[y]{\\sin x}", sympy.root(sympy.sin(x), y)),
+    ("\\sqrt[\\theta]{\\sin x}", sympy.root(sympy.sin(x), theta)),
+    ("x < y", sympy.StrictLessThan(x, y)),
+    ("x \\leq y", sympy.LessThan(x, y)),
+    ("x > y", sympy.StrictGreaterThan(x, y)),
+    ("x \\geq y", sympy.GreaterThan(x, y)),
+    ("\\mathit{x}", sympy.Symbol('x')),
+    ("\\mathit{test}", sympy.Symbol('test')),
+    ("\\mathit{TEST}", sympy.Symbol('TEST')),
+    ("\\mathit{HELLO world}", sympy.Symbol('HELLO world')),
+    ("\\sum_{k = 1}^{3} c", sympy.Sum(c, (k, 1, 3))),
+    ("\\sum_{k = 1}^3 c", sympy.Sum(c, (k, 1, 3))),
+    ("\\sum^{3}_{k = 1} c", sympy.Sum(c, (k, 1, 3))),
+    ("\\sum^3_{k = 1} c", sympy.Sum(c, (k, 1, 3))),
+    ("\\sum_{k = 1}^{10} k^2", sympy.Sum(k**2, (k, 1, 10))),
+    ("\\sum_{n = 0}^{\\infty} \\frac{1}{n!}", sympy.Sum(_Pow(_factorial(n),-1), (n, 0, sympy.oo))),
+    ("\\prod_{a = b}^{c} x", sympy.Product(x, (a, b, c))),
+    ("\\prod_{a = b}^c x", sympy.Product(x, (a, b, c))),
+    ("\\prod^{c}_{a = b} x", sympy.Product(x, (a, b, c))),
+    ("\\prod^c_{a = b} x", sympy.Product(x, (a, b, c))),
+    ("\\ln x", _log(x, sympy.E)),
+    ("\\ln xy", _log(x * y, sympy.E)),
     ("\\log x", _log(x, 10)),
-    ("\\log xy", _log(x*y, 10)),
+    ("\\log xy", _log(x * y, 10)),
     ("\\log_2 x", _log(x, 2)),
     ("\\log_{2} x", _log(x, 2)),
     ("\\log_a x", _log(x, a)),
@@ -139,8 +152,9 @@ GOOD_PAIRS = [
     ("\\log_{a^2} x", _log(x, _Pow(a, 2))),
     ("[x]", x),
     ("[a + b]", _Add(a, b)),
-    ("\\frac{d}{dx} [ \\tan x ]", Derivative(tan(x), x))
+    ("\\frac{d}{dx} [ \\tan x ]", sympy.Derivative(sympy.tan(x), x))
 ]
+
 
 # These bad latex strings should raise an exception when parsed
 BAD_STRINGS = [
@@ -187,23 +201,18 @@ BAD_STRINGS = [
     "\\frac{(2 + x}{1 - x)}"
 ]
 
-total = 0
-passed = 0
-for s, eq in GOOD_PAIRS:
-    total += 1
-    try:
-        if process_sympy(s) != eq:
-            print("ERROR: \"%s\" did not parse to %s" % (s, eq))
-        else:
-            passed += 1
-    except Exception as e:
-        print("ERROR: Exception when parsing \"%s\"" % s)
-for s in BAD_STRINGS:
-    total += 1
-    try:
-        process_sympy(s)
-        print("ERROR: Exception should have been raised for \"%s\"" % s)
-    except Exception:
-        passed += 1 
 
-print("%d/%d STRINGS PASSED" % (passed, total))
+class Latex2SympyTestCase(unittest.TestCase):
+
+    def test_good_pairs(self):
+        for s, eq in GOOD_PAIRS:
+            self.assertEqual(process_sympy(s), eq)
+
+    def test_bad_strings(self):
+        for s in BAD_STRINGS:
+            try:
+                process_sympy(s)
+            except:
+                pass
+            else:
+                self.fail('No exception raised for bad input %s' % s)

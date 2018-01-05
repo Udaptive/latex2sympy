@@ -73,9 +73,9 @@ NUMBER:
 
 EQUAL: '=';
 LT: '<';
-LTE: '\\leq';
+LTE: '\\leq' | '\\le';
 GT: '>';
-GTE: '\\geq';
+GTE: '\\geq' | '\\ge';
 
 BANG: '!';
 

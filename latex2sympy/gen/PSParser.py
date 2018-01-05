@@ -230,7 +230,7 @@ class PSParser ( Parser ):
                      u"'\\sqrt'", u"'\\times'", u"'\\cdot'", u"'\\div'", 
                      u"'\\frac'", u"'\\mathit'", u"'_'", u"'^'", u"':'", 
                      u"<INVALID>", u"<INVALID>", u"<INVALID>", u"'='", u"'<'", 
-                     u"'\\leq'", u"'>'", u"'\\geq'", u"'!'" ]
+                     u"<INVALID>", u"'>'", u"<INVALID>", u"'!'" ]
 
     symbolicNames = [ u"<INVALID>", u"<INVALID>", u"WS", u"ADD", u"SUB", 
                       u"MUL", u"DIV", u"L_PAREN", u"R_PAREN", u"L_BRACE", 

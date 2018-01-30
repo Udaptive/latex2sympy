@@ -220,17 +220,17 @@ class PSParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ u"<INVALID>", u"','", u"<INVALID>", u"'+'", u"'-'", 
-                     u"'*'", u"'/'", u"'('", u"')'", u"'{'", u"'}'", u"'['", 
-                     u"']'", u"'|'", u"'\\lim'", u"<INVALID>", u"'\\int'", 
-                     u"'\\sum'", u"'\\prod'", u"'\\log'", u"'\\ln'", u"'\\sin'", 
-                     u"'\\cos'", u"'\\tan'", u"'\\csc'", u"'\\sec'", u"'\\cot'", 
-                     u"'\\arcsin'", u"'\\arccos'", u"'\\arctan'", u"'\\arccsc'", 
-                     u"'\\arcsec'", u"'\\arccot'", u"'\\sinh'", u"'\\cosh'", 
-                     u"'\\tanh'", u"'\\arsinh'", u"'\\arcosh'", u"'\\artanh'", 
-                     u"'\\sqrt'", u"'\\times'", u"'\\cdot'", u"'\\div'", 
-                     u"'\\frac'", u"'\\mathit'", u"'_'", u"'^'", u"':'", 
-                     u"<INVALID>", u"<INVALID>", u"<INVALID>", u"'='", u"'<'", 
-                     u"<INVALID>", u"'>'", u"<INVALID>", u"'!'" ]
+                     u"'*'", u"'/'", u"<INVALID>", u"<INVALID>", u"'{'", 
+                     u"'}'", u"'['", u"']'", u"'|'", u"'\\lim'", u"<INVALID>", 
+                     u"'\\int'", u"'\\sum'", u"'\\prod'", u"'\\log'", u"'\\ln'", 
+                     u"'\\sin'", u"'\\cos'", u"'\\tan'", u"'\\csc'", u"'\\sec'", 
+                     u"'\\cot'", u"'\\arcsin'", u"'\\arccos'", u"'\\arctan'", 
+                     u"'\\arccsc'", u"'\\arcsec'", u"'\\arccot'", u"'\\sinh'", 
+                     u"'\\cosh'", u"'\\tanh'", u"'\\arsinh'", u"'\\arcosh'", 
+                     u"'\\artanh'", u"'\\sqrt'", u"'\\times'", u"'\\cdot'", 
+                     u"'\\div'", u"'\\frac'", u"'\\mathit'", u"'_'", u"'^'", 
+                     u"':'", u"<INVALID>", u"<INVALID>", u"<INVALID>", u"'='", 
+                     u"'<'", u"<INVALID>", u"'>'", u"<INVALID>", u"'!'" ]
 
     symbolicNames = [ u"<INVALID>", u"<INVALID>", u"WS", u"ADD", u"SUB", 
                       u"MUL", u"DIV", u"L_PAREN", u"R_PAREN", u"L_BRACE", 

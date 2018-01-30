@@ -11,8 +11,8 @@ SUB: '-';
 MUL: '*';
 DIV: '/';
 
-L_PAREN: '(';
-R_PAREN: ')';
+L_PAREN: '(' | '\\left(';
+R_PAREN: ')' | '\\right)';
 L_BRACE: '{';
 R_BRACE: '}';
 L_BRACKET: '[';

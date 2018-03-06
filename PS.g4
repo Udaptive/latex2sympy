@@ -171,8 +171,7 @@ frac:
     R_BRACE;
 
 func_normal:
-    FUNC_LOG | FUNC_LN
-    | FUNC_SIN | FUNC_COS | FUNC_TAN
+    FUNC_SIN | FUNC_COS | FUNC_TAN
     | FUNC_CSC | FUNC_SEC | FUNC_COT
     | FUNC_ARCSIN | FUNC_ARCCOS | FUNC_ARCTAN
     | FUNC_ARCCSC | FUNC_ARCSEC | FUNC_ARCCOT
@@ -198,7 +197,12 @@ func:
     | (FUNC_SUM | FUNC_PROD)
     (subeq supexpr | supexpr subeq)
     mp
-    | FUNC_LIM limit_sub mp;
+    | FUNC_LIM limit_sub mp
+
+    | (FUNC_LOG | FUNC_LN)
+    (L_PAREN func_arg R_PAREN | func_arg_noparens)
+
+    | FUNC_LOG subexpr expr;
 
 args: (expr ',' args) | expr;
 

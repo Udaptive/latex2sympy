@@ -334,48 +334,7 @@ def convert_frac(frac):
 
 def convert_func(func):
     if func.func_normal():
-        if func.L_PAREN():  # function called with parenthesis
-            arg = convert_func_arg(func.func_arg())
-        else:
-            arg = convert_func_arg(func.func_arg_noparens())
-
-        name = func.func_normal().start.text[1:]
-
-        # change arc<trig> -> a<trig>
-        if name in ["arcsin", "arccos", "arctan", "arccsc", "arcsec", "arccot"]:
-            name = "a" + name[3:]
-            expr = getattr(sympy.functions, name)(arg, evaluate=False)
-        if name in ["arsinh", "arcosh", "artanh"]:
-            name = "a" + name[2:]
-            expr = getattr(sympy.functions, name)(arg, evaluate=False)
-
-        if (name == "log" or name == "ln"):
-            if func.subexpr():
-                base = convert_expr(func.subexpr().expr())
-            elif name == "log":
-                base = 10
-            elif name == "ln":
-                base = sympy.E
-            expr = sympy.log(arg, base, evaluate=False)
-
-        func_pow = None
-        should_pow = True
-        if func.supexpr():
-            if func.supexpr().expr():
-                func_pow = convert_expr(func.supexpr().expr())
-            else:
-                func_pow = convert_atom(func.supexpr().atom())
-
-        if name in ["sin", "cos", "tan", "csc", "sec", "cot", "sinh", "cosh", "tanh"]:
-                if func_pow == -1:
-                    name = "a" + name
-                    should_pow = False
-                expr = getattr(sympy.functions, name)(arg, evaluate=False)
-
-        if func_pow and should_pow:
-            expr = sympy.Pow(expr, func_pow, evaluate=False)
-
-        return expr
+        return handle_func_normal(func)
     elif func.LETTER() or func.SYMBOL():
         if func.LETTER():
             fname = func.LETTER().getText()
@@ -412,6 +371,8 @@ def convert_func(func):
         return handle_sum_or_prod(func, "product")
     elif func.FUNC_LIM():
         return handle_limit(func)
+    elif func.FUNC_LOG() or func.FUNC_LN():
+        return handle_log(func)
 
 
 def convert_func_arg(arg):
@@ -419,6 +380,70 @@ def convert_func_arg(arg):
         return convert_expr(arg.expr())
     else:
         return convert_mp(arg.mp_nofunc())
+
+
+def handle_func_normal(func):
+    if func.L_PAREN():  # function called with parenthesis
+        arg = convert_func_arg(func.func_arg())
+    else:
+        arg = convert_func_arg(func.func_arg_noparens())
+
+    name = func.func_normal().start.text[1:]
+
+    # change arc<trig> -> a<trig>
+    if name in ["arcsin", "arccos", "arctan", "arccsc", "arcsec", "arccot"]:
+        name = "a" + name[3:]
+        expr = getattr(sympy.functions, name)(arg, evaluate=False)
+    if name in ["arsinh", "arcosh", "artanh"]:
+        name = "a" + name[2:]
+        expr = getattr(sympy.functions, name)(arg, evaluate=False)
+
+    func_pow = None
+    should_pow = True
+    if func.supexpr():
+        if func.supexpr().expr():
+            func_pow = convert_expr(func.supexpr().expr())
+        else:
+            func_pow = convert_atom(func.supexpr().atom())
+
+    if name in ["sin", "cos", "tan", "csc", "sec", "cot", "sinh", "cosh", "tanh"]:
+            if func_pow == -1:
+                name = "a" + name
+                should_pow = False
+            expr = getattr(sympy.functions, name)(arg, evaluate=False)
+
+    if func_pow and should_pow:
+        expr = sympy.Pow(expr, func_pow, evaluate=False)
+
+    return expr
+
+
+def handle_log(func):
+    """Handle \ln a -> log(a, E), \log a -> log(a, 10), \log_ba -> log(a, b) and \log_{b}a -> log(a, b)"""
+
+    if func.expr():
+        # There is an explicit base and value is given by expression
+        val = convert_expr(func.expr()[0])
+    else:
+        # No explicit base, value is given by func args
+        val = convert_func_arg(func.func_arg_noparens())
+
+    if func.subexpr():
+        # There is an explicit base
+        sub_expr = func.subexpr()
+        if sub_expr.expr():
+            base = convert_expr(sub_expr.expr())
+        elif sub_expr.atom():
+            base = convert_atom(sub_expr.atom())
+    else:
+        # No explicit base
+        if func.FUNC_LOG():
+            base = 10
+        else:
+            # FUNC_LN
+            base = sympy.E
+
+    return sympy.log(val, base, evaluate=False)
 
 
 def handle_integral(func):
@@ -528,6 +553,7 @@ def test_sympy():
     print process_sympy("\\int_{5x}^{2} x^2 dx")
     print process_sympy("\\int x^2 dx")
     print process_sympy("2 4 5 - 2 3 1")
+    print process_sympy("\\log_xa")
 
 
 if __name__ == "__main__":

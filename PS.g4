@@ -18,7 +18,7 @@ R_BRACE: '}' | '\\right\\}';
 L_BRACKET: '[' | '\\left\\[';
 R_BRACKET: ']' | '\\right\\]';
 
-BAR: '|';
+BAR: '|' | '\\left|' | '\\right|';
 
 FUNC_LIM:  '\\lim';
 LIM_APPROACH_SYM: '\\to' | '\\rightarrow' | '\\Rightarrow' | '\\longrightarrow' | '\\Longrightarrow';

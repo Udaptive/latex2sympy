@@ -221,8 +221,8 @@ class PSParser ( Parser ):
 
     literalNames = [ u"<INVALID>", u"','", u"<INVALID>", u"'+'", u"'-'", 
                      u"'*'", u"'/'", u"<INVALID>", u"<INVALID>", u"<INVALID>", 
-                     u"<INVALID>", u"<INVALID>", u"<INVALID>", u"'|'", u"'\\lim'", 
-                     u"<INVALID>", u"'\\int'", u"'\\sum'", u"'\\prod'", 
+                     u"<INVALID>", u"<INVALID>", u"<INVALID>", u"<INVALID>", 
+                     u"'\\lim'", u"<INVALID>", u"'\\int'", u"'\\sum'", u"'\\prod'", 
                      u"'\\log'", u"'\\ln'", u"'\\sin'", u"'\\cos'", u"'\\tan'", 
                      u"'\\csc'", u"'\\sec'", u"'\\cot'", u"'\\arcsin'", 
                      u"'\\arccos'", u"'\\arctan'", u"'\\arccsc'", u"'\\arcsec'", 

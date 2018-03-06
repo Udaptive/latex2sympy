@@ -11,12 +11,12 @@ SUB: '-';
 MUL: '*';
 DIV: '/';
 
-L_PAREN: '(' | '\\left(';
-R_PAREN: ')' | '\\right)';
-L_BRACE: '{';
-R_BRACE: '}';
-L_BRACKET: '[';
-R_BRACKET: ']';
+L_PAREN: '(' | '\\left\\(';
+R_PAREN: ')' | '\\right\\)';
+L_BRACE: '{' | '\\left\\{';
+R_BRACE: '}' | '\\right\\}';
+L_BRACKET: '[' | '\\left\\[';
+R_BRACKET: ']' | '\\right\\]';
 
 BAR: '|';
 

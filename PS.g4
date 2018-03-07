@@ -204,6 +204,8 @@ func:
     | (FUNC_LOG | FUNC_LN)
     (L_PAREN func_arg R_PAREN | func_arg_noparens)
 
+    | FUNC_LOG UNDERSCORE log_args_no_braces
+
     | FUNC_LOG subexpr expr;
 
 args: (expr ',' args) | expr;
@@ -217,6 +219,7 @@ limit_sub:
 
 func_arg: expr | (expr ',' func_arg);
 func_arg_noparens: mp_nofunc;
+log_args_no_braces: (LETTER | NUMBER) expr?;
 
 subexpr: UNDERSCORE (atom | L_BRACE expr R_BRACE);
 supexpr: CARET (atom | L_BRACE expr R_BRACE);

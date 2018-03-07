@@ -426,11 +426,17 @@ def handle_log(func):
     if func.expr():
         # There is an explicit base and value is given by expression
         val = convert_expr(func.expr()[0])
+    elif func.log_args_no_braces():
+        # base and arg are given in a single expression
+        pass
     else:
         # No explicit base, value is given by func args
         val = convert_func_arg(func.func_arg_noparens())
 
-    if func.subexpr():
+    if func.log_args_no_braces():
+        base_and_val = func.log_args_no_braces().getText()
+        base, val = base_and_val[0], base_and_val[1:]
+    elif func.subexpr():
         # There is an explicit base
         sub_expr = func.subexpr()
         if sub_expr.expr():
@@ -555,6 +561,10 @@ def test_sympy():
     print process_sympy("\\int_{5x}^{2} x^2 dx")
     print process_sympy("\\int x^2 dx")
     print process_sympy("2 4 5 - 2 3 1")
+    print process_sympy("\\log_\\mu{2}")
+    print process_sympy("\\log_25")
+    print process_sympy("\\log x")
+    print process_sympy("\\log_{x}a")
     print process_sympy("\\log_xa")
 
 

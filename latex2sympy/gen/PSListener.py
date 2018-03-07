@@ -283,6 +283,15 @@ class PSListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by PSParser#log_args_no_braces.
+    def enterLog_args_no_braces(self, ctx):
+        pass
+
+    # Exit a parse tree produced by PSParser#log_args_no_braces.
+    def exitLog_args_no_braces(self, ctx):
+        pass
+
+
     # Enter a parse tree produced by PSParser#subexpr.
     def enterSubexpr(self, ctx):
         pass

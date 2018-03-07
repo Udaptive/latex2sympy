@@ -26,6 +26,7 @@ FUNC_INT:  '\\int';
 FUNC_SUM:  '\\sum';
 FUNC_PROD: '\\prod';
 
+FUNC_OVERLINE: '\\overline';
 FUNC_LOG:  '\\log';
 FUNC_LN:   '\\ln';
 FUNC_SIN:  '\\sin';
@@ -171,7 +172,8 @@ frac:
     R_BRACE;
 
 func_normal:
-    FUNC_SIN | FUNC_COS | FUNC_TAN
+    FUNC_OVERLINE
+    | FUNC_SIN | FUNC_COS | FUNC_TAN
     | FUNC_CSC | FUNC_SEC | FUNC_COT
     | FUNC_ARCSIN | FUNC_ARCCOS | FUNC_ARCTAN
     | FUNC_ARCCSC | FUNC_ARCSEC | FUNC_ARCCOT

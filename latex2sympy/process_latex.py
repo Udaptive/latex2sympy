@@ -397,6 +397,8 @@ def handle_func_normal(func):
     if name in ["arsinh", "arcosh", "artanh"]:
         name = "a" + name[2:]
         expr = getattr(sympy.functions, name)(arg, evaluate=False)
+    if name == 'overline':
+        expr = sympy.functions.conjugate(arg, evaluate=False)
 
     func_pow = None
     should_pow = True

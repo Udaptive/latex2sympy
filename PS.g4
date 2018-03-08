@@ -6,19 +6,30 @@ options {
 
 WS: [ \t\r\n]+ -> skip;
 
+SKIP_BRACKET_MODIFIER:
+  ( '\\big'
+  | '\\Big'
+  | '\\bigg'
+  | '\\Bigg'
+  | '\\left'
+  | '\\middle'
+  | '\\right'
+  ) '.'?
+  -> skip;
+
 ADD: '+';
 SUB: '-';
 MUL: '*';
 DIV: '/';
 
-L_PAREN: '(' | '\\left\\(';
-R_PAREN: ')' | '\\right\\)';
-L_BRACE: '{' | '\\left\\{';
-R_BRACE: '}' | '\\right\\}';
-L_BRACKET: '[' | '\\left\\[';
-R_BRACKET: ']' | '\\right\\]';
+L_PAREN: '(';
+R_PAREN: ')';
+L_BRACE: '{';
+R_BRACE: '}';
+L_BRACKET: '[';
+R_BRACKET: ']';
 
-BAR: '|' | '\\left|' | '\\right|';
+BAR: '|';
 
 FUNC_LIM:  '\\lim';
 LIM_APPROACH_SYM: '\\to' | '\\rightarrow' | '\\Rightarrow' | '\\longrightarrow' | '\\Longrightarrow';

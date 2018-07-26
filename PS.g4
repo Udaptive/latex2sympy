@@ -36,6 +36,7 @@ LIM_APPROACH_SYM: '\\to' | '\\rightarrow' | '\\Rightarrow' | '\\longrightarrow' 
 FUNC_INT:  '\\int';
 FUNC_SUM:  '\\sum';
 FUNC_PROD: '\\prod';
+FUNC_EXP: '\\exp';
 
 FUNC_OVERLINE: '\\overline';
 FUNC_LOG:  '\\log';
@@ -47,9 +48,9 @@ FUNC_CSC:  '\\csc';
 FUNC_SEC:  '\\sec';
 FUNC_COT:  '\\cot';
 
-FUNC_ARCSIN: '\\arcsin';
-FUNC_ARCCOS: '\\arccos';
-FUNC_ARCTAN: '\\arctan';
+FUNC_ARCSIN: '\\arcsin' | '\\asin';
+FUNC_ARCCOS: '\\arccos' | '\\acos';
+FUNC_ARCTAN: '\\arctan' | '\\atan';
 FUNC_ARCCSC: '\\arccsc';
 FUNC_ARCSEC: '\\arcsec';
 FUNC_ARCCOT: '\\arccot';
@@ -90,6 +91,8 @@ GT: '>';
 GTE: '\\geq' | '\\ge';
 
 BANG: '!';
+
+EULER: '\\e' | '\\E';
 
 SYMBOL: '\\' [a-zA-Z]+;
 
@@ -170,7 +173,7 @@ group:
 
 abs_group: BAR expr BAR;
 
-atom: (LETTER | SYMBOL) subexpr? | NUMBER | DIFFERENTIAL | mathit;
+atom: (LETTER | SYMBOL | EULER) subexpr? | NUMBER | DIFFERENTIAL | mathit;
 
 mathit: CMD_MATHIT L_BRACE mathit_text R_BRACE;
 mathit_text: LETTER*;
@@ -183,7 +186,7 @@ frac:
     R_BRACE;
 
 func_normal:
-    FUNC_OVERLINE
+    FUNC_OVERLINE | FUNC_EXP
     | FUNC_SIN | FUNC_COS | FUNC_TAN
     | FUNC_CSC | FUNC_SEC | FUNC_COT
     | FUNC_ARCSIN | FUNC_ARCCOS | FUNC_ARCTAN

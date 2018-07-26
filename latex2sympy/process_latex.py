@@ -245,7 +245,9 @@ def convert_comp(comp):
 
 
 def convert_atom(atom):
-    if atom.LETTER():
+    if atom.EULER():
+        return sympy.E
+    elif atom.LETTER():
         subscriptName = ''
         if atom.subexpr():
             subscript = None
@@ -391,14 +393,17 @@ def handle_func_normal(func):
     name = func.func_normal().start.text[1:]
 
     # change arc<trig> -> a<trig>
-    if name in ["arcsin", "arccos", "arctan", "arccsc", "arcsec", "arccot"]:
-        name = "a" + name[3:]
+    if name in ["arcsin", "arccos", "arctan", "arccsc", "arcsec", "arccot", "asin", "acos", "atan"]:
+        if len(name) > 4:
+            name = "a" + name[3:]
         expr = getattr(sympy.functions, name)(arg, evaluate=False)
     if name in ["arsinh", "arcosh", "artanh"]:
         name = "a" + name[2:]
         expr = getattr(sympy.functions, name)(arg, evaluate=False)
     if name == 'overline':
         expr = sympy.functions.conjugate(arg, evaluate=False)
+    if name == 'exp':
+        expr = sympy.exp(arg, evaluate=False)
 
     func_pow = None
     should_pow = True
@@ -452,6 +457,20 @@ def handle_log(func):
             base = sympy.E
 
     return sympy.log(val, base, evaluate=False)
+
+
+def handle_exp(func):
+    """Handle \exp x -- \exp(x) -- \exp{x}"""
+    import pdb
+    pdb.set_trace()
+    if func.expr():
+        # There is an explicit base and value is given by expression
+        val = convert_expr(func.expr()[0])
+    else:
+        # No explicit base, value is given by func args
+        val = convert_func_arg(func.func_arg_noparens())
+
+    return sympy.exp(val, evaluate=False)
 
 
 def handle_integral(func):

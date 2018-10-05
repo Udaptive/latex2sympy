@@ -6,6 +6,17 @@ options {
 
 WS: [ \t\r\n]+ -> skip;
 
+SKIP_BRACKET_MODIFIER:
+  ( '\\big'
+  | '\\Big'
+  | '\\bigg'
+  | '\\Bigg'
+  | '\\left'
+  | '\\middle'
+  | '\\right'
+  ) '.'?
+  -> skip;
+
 ADD: '+';
 SUB: '-';
 MUL: '*';
@@ -25,7 +36,9 @@ LIM_APPROACH_SYM: '\\to' | '\\rightarrow' | '\\Rightarrow' | '\\longrightarrow' 
 FUNC_INT:  '\\int';
 FUNC_SUM:  '\\sum';
 FUNC_PROD: '\\prod';
+FUNC_EXP: '\\exp';
 
+FUNC_OVERLINE: '\\overline';
 FUNC_LOG:  '\\log';
 FUNC_LN:   '\\ln';
 FUNC_SIN:  '\\sin';
@@ -35,9 +48,9 @@ FUNC_CSC:  '\\csc';
 FUNC_SEC:  '\\sec';
 FUNC_COT:  '\\cot';
 
-FUNC_ARCSIN: '\\arcsin';
-FUNC_ARCCOS: '\\arccos';
-FUNC_ARCTAN: '\\arctan';
+FUNC_ARCSIN: '\\arcsin' | '\\asin';
+FUNC_ARCCOS: '\\arccos' | '\\acos';
+FUNC_ARCTAN: '\\arctan' | '\\atan';
 FUNC_ARCCSC: '\\arccsc';
 FUNC_ARCSEC: '\\arcsec';
 FUNC_ARCCOT: '\\arccot';
@@ -73,11 +86,13 @@ NUMBER:
 
 EQUAL: '=';
 LT: '<';
-LTE: '\\leq';
+LTE: '\\leq' | '\\le';
 GT: '>';
-GTE: '\\geq';
+GTE: '\\geq' | '\\ge';
 
 BANG: '!';
+
+EULER: '\\e' | '\\E';
 
 SYMBOL: '\\' [a-zA-Z]+;
 
@@ -158,7 +173,7 @@ group:
 
 abs_group: BAR expr BAR;
 
-atom: (LETTER | SYMBOL) subexpr? | NUMBER | DIFFERENTIAL | mathit;
+atom: (LETTER | SYMBOL | EULER) subexpr? | NUMBER | DIFFERENTIAL | mathit;
 
 mathit: CMD_MATHIT L_BRACE mathit_text R_BRACE;
 mathit_text: LETTER*;
@@ -171,7 +186,7 @@ frac:
     R_BRACE;
 
 func_normal:
-    FUNC_LOG | FUNC_LN
+    FUNC_OVERLINE | FUNC_EXP
     | FUNC_SIN | FUNC_COS | FUNC_TAN
     | FUNC_CSC | FUNC_SEC | FUNC_COT
     | FUNC_ARCSIN | FUNC_ARCCOS | FUNC_ARCTAN
@@ -198,7 +213,14 @@ func:
     | (FUNC_SUM | FUNC_PROD)
     (subeq supexpr | supexpr subeq)
     mp
-    | FUNC_LIM limit_sub mp;
+    | FUNC_LIM limit_sub mp
+
+    | (FUNC_LOG | FUNC_LN)
+    (L_PAREN func_arg R_PAREN | func_arg_noparens)
+
+    | FUNC_LOG UNDERSCORE log_args_no_braces
+
+    | FUNC_LOG subexpr expr;
 
 args: (expr ',' args) | expr;
 
@@ -211,6 +233,7 @@ limit_sub:
 
 func_arg: expr | (expr ',' func_arg);
 func_arg_noparens: mp_nofunc;
+log_args_no_braces: (LETTER | NUMBER) expr?;
 
 subexpr: UNDERSCORE (atom | L_BRACE expr R_BRACE);
 supexpr: CARET (atom | L_BRACE expr R_BRACE);

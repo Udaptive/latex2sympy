@@ -51,6 +51,12 @@ GOOD_PAIRS = [
     ("a + b", a + b),
     ("a + b - a", _Add(a + b, -a)),
     ("a^2 + b^2 = c^2", sympy.Eq(a**2 + b**2, c**2)),
+    ("5^38^2", _Mul(sympy.Pow(5, 3, evaluate=False), sympy.Pow(8, 2, evaluate=False))),
+    ("5^3a^2", _Mul(sympy.Pow(5, 3, evaluate=False), sympy.Pow(a, 2, evaluate=False))),
+    ("a^{32}b^2", _Mul(a**32, b**2)),
+    ("5^{38}b^3", _Mul(sympy.Pow(5, 38, evaluate=False) , b**3)),
+    ("6a^3b^4", _Mul(6, _Mul(a**3, b**4))),
+    ("4a^{b^7}", 4 * sympy.Pow(a, sympy.Pow(b, 7, evaluate=False), evaluate=False)),
     ("\\sin \\theta", sympy.sin(theta)),
     ("\\sin(\\theta)", sympy.sin(theta)),
     ("\\sin^{-1} a", sympy.asin(a)),
@@ -206,6 +212,7 @@ class Latex2SympyTestCase(unittest.TestCase):
 
     def test_good_pairs(self):
         for s, eq in GOOD_PAIRS:
+            print 'test_good_pairs:', s
             self.assertEqual(process_sympy(s), eq)
 
     def test_bad_strings(self):

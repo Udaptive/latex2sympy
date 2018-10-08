@@ -1,5 +1,6 @@
 import sympy
 import antlr4
+import re
 from antlr4.error.ErrorListener import ErrorListener
 
 from gen.PSParser import PSParser
@@ -8,8 +9,12 @@ from gen.PSLexer import PSLexer
 from sympy.printing.str import StrPrinter
 
 
+RE_FENCE_EXP = re.compile(r'\^([0-9])')
+
+
 def process_sympy(sympy):
 
+    sympy = _fence_numeric_exponents(sympy)
     matherror = MathErrorListener(sympy)
 
     stream = antlr4.InputStream(sympy)
@@ -28,6 +33,14 @@ def process_sympy(sympy):
     expr = convert_relation(relation)
 
     return expr
+
+
+def _fence_numeric_exponents(sympy):
+    """Resolve ambiguity in cases such as '3^45^6' which should be
+    interpreted as 3^{4}*5^{6} but is instead read as 3^{45}... The
+    lexer as written cannot distinguish between a single digit and
+    a number."""
+    return RE_FENCE_EXP.sub('^{\g<1>}', sympy)
 
 
 class MathErrorListener(ErrorListener):

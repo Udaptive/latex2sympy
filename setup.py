@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='latex2sympy',
-    version='0.1.2',
+    version='0.1.3',
     description='latex2sympy parses LaTeX math expressions and converts it into the equivalent SymPy form',
     author='augustt198',
     author_email='aug@mit.edu',

@@ -76,7 +76,14 @@ CARET: '^';
 COLON: ':';
 
 fragment WS_CHAR: [ \t\r\n];
-DIFFERENTIAL: 'd' WS_CHAR*? ([a-zA-Z] | '\\' [a-zA-Z]+);
+DIFFERENTIAL: 'd' WS_CHAR*? ([a-zA-Z]
+    | '\\alpha' | '\\beta' | '\\gamma' | '\\Gamma' | '\\delta' | '\\Delta'
+    | '\\epsilon' | '\\varepsilon' | '\\zeta' | '\\eta' | '\\theta'
+    | '\\vartheta' | '\\Theta' | '\\iota' | '\\kappa' | '\\lambda'
+    | '\\Lambda' | '\\mu' | '\\nu' | '\\xi' | '\\Xi' | '\\pi' | '\\Pi'
+    | '\\rho' | '\\varrho' | '\\sigma' | '\\Sigma' | '\\tau' | '\\upsilon'
+    | '\\Upsilon' | '\\phi' | '\\varphi' | '\\Phi' | '\\chi' | '\\psi'
+    | '\\Psi' | '\\omega' | '\\Omega' );
 
 LETTER: [a-zA-Z];
 fragment DIGIT: [0-9];

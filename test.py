@@ -1,6 +1,6 @@
 import unittest
 import sympy
-from sympy.abc import x, y, z, a, b, c, f, t, k, n
+from sympy.abc import x, y, z, a, b, c, d, f, t, k, n
 
 from latex2sympy import process_sympy
 
@@ -46,6 +46,10 @@ GOOD_PAIRS = [
     ("x^{3 + 1}", x**_Add(3,1)),
     ("-c", -c),
     ("a \\cdot b", a * b),
+    ("a\\cdot b^8\\times c", _Mul(_Mul(a, sympy.Pow(b, 8, evaluate=False)), c)),
+    ("d\\cdot d^8\\times d", _Mul(_Mul(d, sympy.Pow(d, 8, evaluate=False)), d)),
+    ("c\\times2", _Mul(c, 2)),
+    ("d\\times2", _Mul(d, 2)),
     ("a / b", a / b),
     ("a \\div b", a / b),
     ("a + b", a + b),
@@ -57,6 +61,7 @@ GOOD_PAIRS = [
     ("5^{38}b^3", _Mul(sympy.Pow(5, 38, evaluate=False) , b**3)),
     ("6a^3b^4", _Mul(6, _Mul(a**3, b**4))),
     ("4a^{b^7}", 4 * sympy.Pow(a, sympy.Pow(b, 7, evaluate=False), evaluate=False)),
+    ("\\frac{d}{d\\theta} x", sympy.Derivative(x, theta)),
     ("\\sin \\theta", sympy.sin(theta)),
     ("\\sin(\\theta)", sympy.sin(theta)),
     ("\\sin^{-1} a", sympy.asin(a)),
@@ -212,7 +217,7 @@ class Latex2SympyTestCase(unittest.TestCase):
 
     def test_good_pairs(self):
         for s, eq in GOOD_PAIRS:
-            print 'test_good_pairs:', s
+            print 'test_good_pairs:', 'input:', s, 'output:', str(eq)
             self.assertEqual(process_sympy(s), eq)
 
     def test_bad_strings(self):

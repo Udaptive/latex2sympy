@@ -1,1 +1,1 @@
-from process_latex import process_sympy
+from .process_latex import process_sympy

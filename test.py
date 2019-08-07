@@ -217,7 +217,7 @@ class Latex2SympyTestCase(unittest.TestCase):
 
     def test_good_pairs(self):
         for s, eq in GOOD_PAIRS:
-            print 'test_good_pairs:', 'input:', s, 'output:', str(eq)
+            print('test_good_pairs:', 'input:', s, 'output:', str(eq))
             self.assertEqual(process_sympy(s), eq)
 
     def test_bad_strings(self):

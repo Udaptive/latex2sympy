@@ -10,7 +10,7 @@ setup(
     author_email='aug@mit.edu',
     packages=['latex2sympy', 'latex2sympy.gen'],
     install_requires=[
-        'sympy==0.7.6',
-        'antlr4-python2-runtime==4.7.1',
+        'sympy==1.4',
+        'antlr4-python3-runtime==4.7.1',
     ],
 )

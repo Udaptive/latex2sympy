@@ -36,7 +36,7 @@ def equivalent( expr1, expr2 ):
     try:
         equiv = simplify( expr2 - expr1 ) == 0
     except NotImplementedError:
-        print 'sympy could not simplify', expr2 - expr1
+        print('sympy could not simplify', expr2 - expr1)
         equiv = False
     return equiv
 
@@ -164,32 +164,33 @@ class TestLatex(object):
 
         failed_tests = []
         for expr in test_cases:
+            e = None
             try:
                 s_l_expr = latex( expr )
                 l_expr = process_sympy( s_l_expr )
                 equiv = equivalent( expr, l_expr )
-                e = None
-            except Exception as e:
+            except Exception as error:
                 # Parsing failed
                 l_expr = None
                 equiv = False
+                e = error
             if not equiv:
-                print '%s %s' % ( s_l_expr, 'PASSED' if equiv else 'FAILED' )
+                print('%s %s' % ( s_l_expr, 'PASSED' if equiv else 'FAILED' ))
                 failed_tests.append( ( s_l_expr, l_expr ) )
-                print 'sympy: %s\nlatex: %s' % ( expr, l_expr )
+                print('sympy: %s\nlatex: %s' % ( expr, l_expr ))
                 if e is not None:
-                    print e
-                print
+                    print(e)
+                print()
 
         if failed_tests:
-            print len( failed_tests ), 'failed test cases'
+            print(len( failed_tests ), 'failed test cases')
         assert len(failed_tests) == 0
 
     def test_generated_cases(self):
 
         failed_tests = []
         n_tests = 20
-        print 'Generating', n_tests, 'test_cases\n'
+        print('Generating', n_tests, 'test_cases\n')
         for _ in np.arange( n_tests ):
             n_terms = np.random.randint( 1, high=5 )
             expr = generate_term()
@@ -209,24 +210,25 @@ class TestLatex(object):
                 else:
                     assert False
             s_l_expr = latex( expr )
+            e = None
             try:
                 l_expr = process_sympy( s_l_expr )
                 equiv = equivalent( expr, l_expr )
-                e = None
-            except Exception as e:
+            except Exception as error:
                 # Parsing failed
                 l_expr = None
                 equiv = False
+                e = error
             if not equiv:
-                print '%s %s' % ( s_l_expr, 'PASSED' if equiv else 'FAILED' )
+                print('%s %s' % ( s_l_expr, 'PASSED' if equiv else 'FAILED' ))
                 failed_tests.append( ( s_l_expr, l_expr ) )
-                print 'sympy: %s\nlatex: %s' % ( expr, l_expr )
+                print('sympy: %s\nlatex: %s' % ( expr, l_expr ))
                 if e is not None:
-                    print e
-                print
+                    print(e)
+                print()
 
         if failed_tests:
-            print len( failed_tests ), 'failed test cases'
+            print(len( failed_tests ), 'failed test cases')
         assert len(failed_tests) == 0
 
 # A limitation of test approach 1 is the sympy object used to generate the latex could have simplified the original input
@@ -260,12 +262,12 @@ class TestLatex(object):
             l_expr = process_sympy( s_l_expr )
             equiv = equivalent( expr, l_expr )
             if not equiv:
-                print '%s %s' % ( s_l_expr, 'PASSED' if equiv else 'FAILED' )
+                print('%s %s' % ( s_l_expr, 'PASSED' if equiv else 'FAILED' ))
                 failed_tests.append( ( s_l_expr, l_expr ) )
-                print 'sympy: %s\nlatex: %s\n' % ( expr, l_expr )
+                print('sympy: %s\nlatex: %s\n' % ( expr, l_expr ))
 
         if failed_tests:
-            print len( failed_tests ), 'failed test cases'
+            print(len( failed_tests ), 'failed test cases')
         assert len(failed_tests) == 0
 
 # Test approach 3
@@ -305,12 +307,12 @@ class TestLatex(object):
             except:
                 passed = True
             if not passed:
-                print '%s %s' % ( s_l_expr, 'PASSED' if passed else 'FAILED' )
+                print('%s %s' % ( s_l_expr, 'PASSED' if passed else 'FAILED' ))
                 failed_tests.append( ( s_l_expr, l_expr ) )
-                print '  %s\n' % l_expr
+                print('  %s\n' % l_expr)
 
         if failed_tests:
-            print len( failed_tests ), 'failed test cases'
+            print(len( failed_tests ), 'failed test cases')
         assert len(failed_tests) == 0
 
 # Test approach 4
@@ -325,19 +327,20 @@ class TestLatex(object):
 
         failed_tests = []
         for s_l_expr in test_cases:
+            e = None
             try:
                 l_expr = process_sympy( s_l_expr )
                 passed = True
-                e = None
-            except Exception as e:
+            except Exception as error:
                 passed = False
                 l_expr = None
+                e = error
             if not passed:
                 failed_tests.append( ( s_l_expr, l_expr ) )
-                print '%s %s' % ( s_l_expr, 'PASSED' if passed else 'FAILED' )
+                print('%s %s' % ( s_l_expr, 'PASSED' if passed else 'FAILED' ))
                 if e is not None:
-                    print '%s\n' % e
+                    print('%s\n' % e)
 
         if failed_tests:
-            print len( failed_tests ), 'failed test cases'
+            print(len( failed_tests ), 'failed test cases')
         assert len(failed_tests) == 0
